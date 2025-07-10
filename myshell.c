@@ -159,7 +159,8 @@ void display_page(FileEntry items[], int total_count, int current_page) {
         if (items[i].is_directory) {
             printf("[DIR]  %d. %s (Last modified: %s)\n", i, items[i].name, time_str);
         } else {
-            printf("[FILE] %d. %s (Last modified: %s)\n", i, items[i].name, time_str);
+            printf("[FILE] %d. %s (Size: %ld KB, Last modified: %s)\n", 
+       i, items[i].name, items[i].size / 1024, time_str);
         }
     }
 }
