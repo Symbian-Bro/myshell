@@ -157,12 +157,24 @@ void display_page(FileEntry items[], int total_count, int current_page) {
         strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M", tm_info);
 
         if (items[i].is_directory) {
-            printf("[DIR]  %d. %s (Last modified: %s)\n", i, items[i].name, time_str);
+            printf("[DIR]  %d. %s (Last modified: %s)\n", 
+                   i, items[i].name, time_str);
         } else {
-            printf("[FILE] %d. %s (Last modified: %s)\n", i, items[i].name, time_str);
+            struct stat file_stat;
+            stat(items[i].name, &file_stat);
+
+            if (file_stat.st_mode & S_IXUSR) {
+                //(True)File is executable
+                printf("[EXE]  %d. %s (Size: %ld KB, Last modified: %s)\n", 
+                       i, items[i].name, items[i].size / 1024, time_str);
+            } else {
+                printf("[FILE] %d. %s (Size: %ld KB, Last modified: %s)\n", 
+                       i, items[i].name, items[i].size / 1024, time_str);
+            }
         }
     }
 }
+
 
 // Handle user commands: pagination, editing, running programs, sorting, changing directories, etc.
 void handle_command(char command, FileEntry items[], int total_count, int *current_page) {
