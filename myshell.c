@@ -152,10 +152,14 @@ void display_page(FileEntry items[], int total_count, int current_page) {
 
     // Display the items on the current page
     for (int i = start; i < end && i < total_count; i++) {
+        char time_str[20];  // buffer to store formatted time
+        struct tm *tm_info = localtime(&(items[i].mtime));
+        strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M", tm_info);
+
         if (items[i].is_directory) {
-            printf("[DIR]  %d. %s\n", i, items[i].name);
+            printf("[DIR]  %d. %s (Last modified: %s)\n", i, items[i].name, time_str);
         } else {
-            printf("[FILE] %d. %s\n", i, items[i].name);
+            printf("[FILE] %d. %s (Last modified: %s)\n", i, items[i].name, time_str);
         }
     }
 }
